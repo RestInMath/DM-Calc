@@ -39,9 +39,8 @@ Fraction Fraction::RED_Q_Q(){
 }
 
 bool Fraction::INT_Q_B(){
-	Natural nod = GCF_NN_N(nom.ABS_Z_N(), den);
-	
-	if (!COM_NN_D(nod, den))
+
+	if (COM_NN_D(MOD_NN_N(nom.ABS_Z_N(), den), Natural()) == 0)
 		return true;
 	else
 		return false;

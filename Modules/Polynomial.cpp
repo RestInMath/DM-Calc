@@ -37,7 +37,8 @@ void Polynomial::printPolynomial()
 		coeffs[i] = coeffs[i].RED_Q_Q();
 		if (coeffs[i].INT_Q_B()) coeffs[i].nom.printForFract();
 		else coeffs[i].printForPo();
-		std::cout << "x^" << i << ' ';
+		if(i != 0)
+			std::cout << "x^" << i << ' ';
 	}
 }
 

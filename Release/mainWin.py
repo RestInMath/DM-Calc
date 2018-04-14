@@ -18,7 +18,7 @@ def parse_input_nat(inp):
             den = '1'
             if '/' in i:
                 nom = i[:i.index('/')]
-                den = i[i.index('/')+1:]
+                den = i[i.index('/')+1:][::-1]
 
             if nom[0] == '+':
                 nom = nom[1:][::-1]

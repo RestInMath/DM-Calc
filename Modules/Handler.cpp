@@ -10,7 +10,6 @@ using namespace std;
 void Handler(int params_count, char* params[]) {
 	string type = string(params[1]);
 
-
 	if (params_count < 7) std::cout << "Недостаточно аргументов - неверный ввод\n";
 
 	else if (type == "F" || type == "A") {
@@ -48,19 +47,22 @@ Fraction get_F_val(char* params[]) {
 	}
 	else if (op == 'K') {
 		if (num1.INT_Q_B() && num2.INT_Q_B()) {
-			Natural temp = LCM_NN_N(n1.ABS_Z_N(), n2.ABS_Z_N());
+			num1 = num1.RED_Q_Q(); num2 = num2.RED_Q_Q();
+			Natural temp = LCM_NN_N(num1.TRANS_Q_Z().ABS_Z_N(), num2.TRANS_Q_Z().ABS_Z_N());
 			return Fraction(temp, one);
 		}
 		else cout << "Поиск НОК осуществляется лишь у целых и натуральных чисел\n";
+		exit(0);
 	}
 	else if (op == 'D') {
 		if (num1.INT_Q_B() && num2.INT_Q_B()) {
+			num1 = num1.RED_Q_Q(); num2 = num2.RED_Q_Q();
 			Natural temp = GCF_NN_N(n1.ABS_Z_N(), n2.ABS_Z_N());
 			return Fraction(temp, one);
 		}
 		else cout << "Поиск НОД осуществляется лишь у целых и натуральных чисел\n";
+		exit(0);
 	}
-
 }
 
 
