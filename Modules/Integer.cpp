@@ -101,27 +101,29 @@ Integer TRANS_N_Z(Natural a) {
 
 //ready
 Integer ADD_ZZ_Z(Integer i1, Integer i2) {
-	bool first_pos = i1.POZ_Z_D() == 2,
-		second_pos = i2.POZ_Z_D() == 2;
-	if (first_pos && second_pos) {
+	int first_pos = i1.POZ_Z_D(),
+		second_pos = i2.POZ_Z_D();
+	if (first_pos == 0) return i2;
+	else if (second_pos == 0) return i1;
+
+	if (first_pos == 2 && second_pos == 2) {
 		return TRANS_N_Z(ADD_NN_N(i1.TRANS_Z_N(), i2.TRANS_Z_N()));
 	}
-	else if (!first_pos && !second_pos) {
+	else if (first_pos == 1 && second_pos == 1) {
 		return TRANS_N_Z(ADD_NN_N(i1.TRANS_Z_N(), i2.TRANS_Z_N())).MUL_ZM_Z();
 	}
 	else {
 		int comp = COM_NN_D(i1.TRANS_Z_N(), i2.TRANS_Z_N());
 		if (comp == 0) return Integer();
-		else {
-			if (comp == 2) {
-				Integer to_return = TRANS_N_Z(SUB_NN_N(i1.TRANS_Z_N(), i2.TRANS_Z_N()));
-				return (i1.POZ_Z_D() == 1 ? to_return.MUL_ZM_Z() : to_return);
-			}
-			else if (comp == 1) {
-				Integer to_return = TRANS_N_Z(SUB_NN_N(i2.TRANS_Z_N(), i1.TRANS_Z_N()));
-				return (i1.POZ_Z_D() == 1 ? to_return : to_return.MUL_ZM_Z());
-			}
+		else if (comp == 2) {
+			Integer to_return = TRANS_N_Z(SUB_NN_N(i1.TRANS_Z_N(), i2.TRANS_Z_N()));
+			return (i1.POZ_Z_D() == 1 ? to_return.MUL_ZM_Z() : to_return);
 		}
+		else if (comp == 1) {
+			Integer to_return = TRANS_N_Z(SUB_NN_N(i2.TRANS_Z_N(), i1.TRANS_Z_N()));
+			return (i1.POZ_Z_D() == 1 ? to_return : to_return.MUL_ZM_Z());
+		}
+		
 	}
 }
 

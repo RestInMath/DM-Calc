@@ -8,12 +8,13 @@ class Polynomial
 	friend Polynomial MUL_PQ_P(Polynomial a, Fraction q);
 	friend Polynomial MUL_PP_P(Polynomial a, Polynomial b);
 private:
-	Fraction* coeffs;	//массив коэффициентов, индекс - степень, элемент по индексу - коэффициент
-	long m;					//5x^3 -11x + 9: coeffs[0] = 9, coeffs[1] = -11, coeffs[2] = 0, coeffs[3] = 5
+	Fraction* coeffs;	
+	long m;
 public:
 	Polynomial();
 	Polynomial(long t_m, Fraction* t_coeffs);
 	Polynomial operator = (const Polynomial p);
+
 	void printPolynomial();
 	Polynomial FAC_P_Q();
 	Fraction LED_P_Q();

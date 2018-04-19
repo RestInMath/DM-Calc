@@ -9,7 +9,8 @@
 using namespace std;
 void Handler(int params_count, char* params[]) {
 	string type = string(params[1]);
-
+	string op = string(params[2]);
+	
 	if (params_count < 7) std::cout << "Недостаточно аргументов - неверный ввод\n";
 
 	else if (type == "F" || type == "A") {
@@ -20,9 +21,13 @@ void Handler(int params_count, char* params[]) {
 	}
 
 	else if (type == "P") {
-		get_P_val(params_count, params).printPolynomial();
-	}	
+		int counter = 0;
+		Polynomial p1 = get_P(params, op, counter);
+		counter += 1;
+		Polynomial p2 = get_P(params, op, counter);
 
+		get_P_val(p1,p2,op).printPolynomial();
+	}	
 }
 
 Fraction get_F_val(char* params[]) {
@@ -34,9 +39,9 @@ Fraction get_F_val(char* params[]) {
 	Fraction num1(n1, d1), num2(n2, d2);
 
 	if (op == '+') return ADD_QQ_Q(num1, num2);
-	else if (op == '-') return SUB_QQ_Q(num1, num2);
-	else if (op == '/') return DIV_QQ_Q(num1, num2);
-	else if (op == '*') return MUL_QQ_Q(num1, num2);
+	else if (op == '-') return SUB_QQ_Q(num1, num2).RED_Q_Q();
+	else if (op == '/') return DIV_QQ_Q(num1, num2).RED_Q_Q();
+	else if (op == '*') return MUL_QQ_Q(num1, num2).RED_Q_Q();
 	else if (op == '%') {
 		Fraction temp = DIV_QQ_Q(num1, num2);
 		return Fraction(MOD_ZZ_Z(temp.nom, TRANS_N_Z(temp.den)), one);
@@ -66,19 +71,33 @@ Fraction get_F_val(char* params[]) {
 }
 
 
-Polynomial get_P_val(int params_count, char* params[]) {
-	long coeff_count = 0, main_deg = (stoi(params[4]));
-	Fraction* coeffs = (Fraction*)malloc((main_deg + 1) * sizeof(Fraction));
+Polynomial get_P(char* params[], string op, int &counter) {
+	long coeff_count = 0, main_deg = stoi(params[5 + counter]);
 	
+	Fraction* coeffs = (Fraction*)malloc((main_deg + 1) * sizeof(Fraction));
+		
 	for (int i = 0; i <= main_deg; i++) coeffs[i] = Fraction();
 
-
-	for (int i = 0; i < params_count - 2; i+=3) {
-		long deg = stoi(params[4 + i]);
-		Integer n(params[2 + i]);
-		Natural d(params[3 + i]), one(1);
+	while(true) {
+		if (params[3 + counter] == op) {
+			return Polynomial(main_deg, coeffs); }
+		long deg = stoi(params[5 + counter]);
+		Integer n(params[3 + counter]);
+		Natural d(params[4 + counter]), one(1);
 		Fraction num(n, d);
 		coeffs[deg] = num;
+		counter += 3;
 	}
 	return Polynomial(main_deg, coeffs);
+}
+
+Polynomial get_P_val(Polynomial a, Polynomial b, string op) {
+	if (op == "+") return ADD_PP_P(a, b);
+
+	if (op == "-") return SUB_PP_P(a, b);
+
+	if (op == "*") return MUL_PP_P(a, b);
+
+	if (op == "/") return DIV_PP_P(a, b);
+
 }

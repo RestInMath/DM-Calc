@@ -40,7 +40,7 @@ Fraction Fraction::RED_Q_Q(){
 
 bool Fraction::INT_Q_B(){
 
-	if (COM_NN_D(MOD_NN_N(nom.ABS_Z_N(), den), Natural()) == 0)
+	if (MOD_NN_N(nom.ABS_Z_N(), den).NZER_N_B())
 		return true;
 	else
 		return false;

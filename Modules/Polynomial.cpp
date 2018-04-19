@@ -37,7 +37,9 @@ void Polynomial::printPolynomial()
 		coeffs[i] = coeffs[i].RED_Q_Q();
 		if (coeffs[i].INT_Q_B()) coeffs[i].nom.printForFract();
 		else coeffs[i].printForPo();
-		if(i != 0)
+		if (i == 1)
+			std::cout << 'x' << ' ';
+		else if(i != 0)
 			std::cout << "x^" << i << ' ';
 	}
 }
@@ -45,17 +47,18 @@ void Polynomial::printPolynomial()
 Polynomial ADD_PP_P(Polynomial a, Polynomial b)	
 {
 	Polynomial result;
-	if (sizeof(a) >= sizeof(b))
+	if (a.m > b.m)
 	{
 		result = a;
-		for (int i = 0; i < sizeof(b); i++)
+		for (int i = 0; i <= b.m; i++)
 			result.coeffs[i] = ADD_QQ_Q(result.coeffs[i], b.coeffs[i]);
 	}
 	else
 	{
 		result = b;
-		for (int i = 0; i < sizeof(a); i++)
+		for (int i = 0; i <= a.m; i++) {
 			result.coeffs[i] = ADD_QQ_Q(result.coeffs[i], a.coeffs[i]);
+		}
 	}
 	return result;
 }

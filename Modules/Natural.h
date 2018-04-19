@@ -26,6 +26,8 @@ public:
 	Natural(std::string arr);
 	Natural(int num);
 	Natural operator = (const Natural a);
+	
+	
 	void printNum();
 	void printForPo();
 
@@ -35,6 +37,7 @@ public:
 	Natural MUL_Nk_N(int k);
 	
 };
+
 Natural MOD_NN_N(Natural a, Natural b);
 Natural GCF_NN_N(Natural a, Natural b);
 Natural LCM_NN_N(Natural a, Natural b);

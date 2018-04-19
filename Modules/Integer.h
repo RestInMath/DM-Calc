@@ -5,8 +5,8 @@ class Fraction;
 class Integer {
 private:
 	bool sign;
-	long int n;		//n - �� ������� ������ ���������� ����, �.�. ������������ ������
-	short *nums;	//nums - ������ ���� "�������������" �����
+	long int n;
+	short *nums;
 public:
 	friend Fraction;
 	Integer();
@@ -15,6 +15,8 @@ public:
 	Integer(std::string t_nums);
 	Integer(Natural a);
 	Integer operator = (const Integer &a);
+
+
 	void printNum();
 	void printForFract();
 

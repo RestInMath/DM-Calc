@@ -9,6 +9,7 @@ public:
 	Natural den;
 	Fraction ();
 	Fraction(Integer a, Natural b);
+
 	void printNum();
 	void printForPo();
 	void print();
