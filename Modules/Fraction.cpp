@@ -30,11 +30,12 @@ void Fraction::print()
 	nom.printForFract();
 	std::cout << "/";
 	den.printForPo();
+	std::cout << std::endl;
 }
 
 Fraction Fraction::RED_Q_Q(){
 	Natural nod;
-	nod = GCF_NN_N(nom.ABS_Z_N(), den); //GCF_NN_N ���������� Natural
+	nod = GCF_NN_N(nom.ABS_Z_N(), den);
 	return Fraction(DIV_ZZ_Z(nom, TRANS_N_Z(nod)), DIV_NN_N(den, nod));
 }
 

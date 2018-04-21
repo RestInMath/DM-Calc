@@ -103,8 +103,11 @@ Integer TRANS_N_Z(Natural a) {
 Integer ADD_ZZ_Z(Integer i1, Integer i2) {
 	int first_pos = i1.POZ_Z_D(),
 		second_pos = i2.POZ_Z_D();
+	
 	if (first_pos == 0) return i2;
 	else if (second_pos == 0) return i1;
+
+	
 
 	if (first_pos == 2 && second_pos == 2) {
 		return TRANS_N_Z(ADD_NN_N(i1.TRANS_Z_N(), i2.TRANS_Z_N()));
@@ -135,24 +138,26 @@ Integer SUB_ZZ_Z(Integer i1, Integer i2)
 Integer MUL_ZZ_Z(Integer i1, Integer i2)
 {
 	Integer to_return = TRANS_N_Z( MUL_NN_N(i1.TRANS_Z_N(), i2.TRANS_Z_N()) );
-	if (i1.POZ_Z_D() == i2.POZ_Z_D()) return to_return;
-	else return to_return.MUL_ZM_Z();
+	
+	if ((i1.POZ_Z_D() == 1 || i2.POZ_Z_D() == 1) && i1.POZ_Z_D() != i2.POZ_Z_D()) return to_return.MUL_ZM_Z();
+	else 
+		return to_return;
 }
 
 Integer DIV_ZZ_Z(Integer i1, Integer i2){
 	int poz_i1 = i1.POZ_Z_D(), poz_i2 = i2.POZ_Z_D();
-	if (poz_i2 == 0) return std::string(NULL);
+	if (poz_i2 == 0) { puts("Деление на ноль"); exit(0); }
 	Integer to_return = TRANS_N_Z(DIV_NN_N(i1.ABS_Z_N(), i2.ABS_Z_N()));
-	if (poz_i1 != poz_i2)
+	if ((poz_i1 ==1 || poz_i2 == 1) && poz_i1 != poz_i2)
 		to_return.MUL_ZM_Z();
 	return to_return;
 }
 
 Integer MOD_ZZ_Z(Integer i1, Integer i2) {
 	int poz_i1 = i1.POZ_Z_D(), poz_i2 = i2.POZ_Z_D();
-	if (poz_i2 == 0) return std::string(NULL);
+	if (poz_i2 == 0) { puts("Деление на ноль"); exit(0); }
 	Integer to_return = MOD_NN_N(i1.ABS_Z_N(), i2.ABS_Z_N());
-	if (poz_i1 != poz_i2)
+	if ((poz_i1 == 1 || poz_i2 == 1) && poz_i1 != poz_i2)
 		to_return.MUL_ZM_Z();
 	return to_return;
 }

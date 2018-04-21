@@ -12,11 +12,12 @@ private:
 	long m;
 public:
 	Polynomial();
+	Polynomial(long t_n, Fraction);
 	Polynomial(long t_m, Fraction* t_coeffs);
 	Polynomial operator = (const Polynomial p);
 
 	void printPolynomial();
-	Polynomial FAC_P_Q();
+	Polynomial FAC_P_Q(bool show);
 	Fraction LED_P_Q();
 	int DEG_P_N();
 	Polynomial MUL_Pxk_P(long k);

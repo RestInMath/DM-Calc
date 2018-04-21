@@ -9,6 +9,16 @@ Polynomial::Polynomial()
 	m = 0;
 }
 
+Polynomial::Polynomial(long t_n, Fraction f)
+{
+	m = t_n;
+	Fraction* c = (Fraction*)malloc((t_n + 1) * sizeof(Fraction));
+	c[m] = f;
+	for (long i = 0; i < m; i++)
+		c[i] = Fraction();
+	coeffs = c;
+}
+
 Polynomial::Polynomial(long t_m, Fraction* t_coeffs)
 {
 	m = t_m;
@@ -26,6 +36,10 @@ Polynomial Polynomial::operator = (const Polynomial p) { //changed
 
 void Polynomial::printPolynomial()
 {
+	if (m == 0) {
+		coeffs[0].printNum();
+		exit(0);
+	}
 	for (int i = m; i >= 0; i--)
 	{
 		if (coeffs[i].nom.ABS_Z_N().NZER_N_B()) {
@@ -50,8 +64,9 @@ Polynomial ADD_PP_P(Polynomial a, Polynomial b)
 	if (a.m > b.m)
 	{
 		result = a;
-		for (int i = 0; i <= b.m; i++)
+		for (int i = 0; i <= b.m; i++) {
 			result.coeffs[i] = ADD_QQ_Q(result.coeffs[i], b.coeffs[i]);
+		}
 	}
 	else
 	{
@@ -60,24 +75,36 @@ Polynomial ADD_PP_P(Polynomial a, Polynomial b)
 			result.coeffs[i] = ADD_QQ_Q(result.coeffs[i], a.coeffs[i]);
 		}
 	}
+	for (long i = result.m; i > 0; i--) {
+		if (result.coeffs[i].nom.POZ_Z_D() == 0)
+			result.m--;
+		else break;
+	}
 	return result;
 }
 
 Polynomial SUB_PP_P(Polynomial a, Polynomial b)
 {
 	Polynomial result;
-	if (sizeof(a) >= sizeof(b))
+	if (a.m >= b.m)
 	{
 		result.operator= (a);
-		for (int i = 0; i < sizeof(b); i++)
+		for (long i = 0; i <= b.m; i++)
 			result.coeffs[i] = SUB_QQ_Q(result.coeffs[i], b.coeffs[i]);
 	}
 	else
 	{
 		result.operator = (b);
-		for (int i = 0; i < sizeof(a); i++)
-			result.coeffs[i] = SUB_QQ_Q(result.coeffs[i], a.coeffs[i]);
+		for (long i = 0; i <= a.m; i++)
+			result.coeffs[i] = SUB_QQ_Q(a.coeffs[i], result.coeffs[i]);
+		for (long i = a.m + 1; i <= result.m; i++)
+			result.coeffs[i].nom.MUL_ZM_Z();
 	}
+	for(long i = result.m; i >= 0; i--)
+		if (result.coeffs[i].nom.POZ_Z_D() == 0)
+			result.m--;
+		else break;
+
 	return result;
 }
 
@@ -85,8 +112,9 @@ Polynomial MUL_PQ_P(Polynomial a, Fraction q)
 {
 	Polynomial result;
 	result.operator= (a);
-	for (int i = 0; i < sizeof(a); i++)
+	for (int i = 0; i <= a.m; i++) {
 		result.coeffs[i] = MUL_QQ_Q(result.coeffs[i], q);
+	}
 	return result;
 }
 
@@ -100,7 +128,7 @@ Polynomial Polynomial::MUL_Pxk_P(long k) {
 		a.coeffs[j] = a.coeffs[i];
 		j--;
 	}
-	for (int i = 0; i < k - 1; i++) {
+	for (int i = 0; i <= k - 1; i++) {
 		a.coeffs[i] = Fraction();
 	}
 	return a;
@@ -116,61 +144,66 @@ int Polynomial::DEG_P_N()
 	return m;
 }
 
-Polynomial Polynomial::FAC_P_Q()
+Polynomial Polynomial::FAC_P_Q(bool show)
 {
-	
-	return Polynomial();
+	Natural NOD(coeffs[m].nom.ABS_Z_N());
+	Natural NOK(coeffs[m].den);
+	for (int i = m - 1; i >= 0; i--) {
+		if (!coeffs[i].nom.ABS_Z_N().NZER_N_B()) {
+			NOD = GCF_NN_N(NOD, coeffs[i].nom.ABS_Z_N());
+			NOK = LCM_NN_N(NOK, coeffs[i].den);
+		}
+	}
+	Fraction mult(NOD, NOK);
+	Fraction* new_coeffs;
+	new_coeffs = (Fraction*)malloc((m + 1) * sizeof(Fraction));
+	for (int i = m; i >= 0; i--) {
+		new_coeffs[i] = DIV_QQ_Q(coeffs[i], mult);
+	}
+	if (show) std::cout << '('; mult.RED_Q_Q().printForPo(); std::cout << ") ";
+	return Polynomial(m, new_coeffs);
 }
 
 Polynomial MUL_PP_P(Polynomial a, Polynomial b)
 {
-	Fraction* newCoeffs = (Fraction*)malloc((a.m + b.m - 2) * sizeof(Fraction));
-	for (int i = 0; i < a.m + b.m; i++)
+	Fraction* newCoeffs = (Fraction*)malloc((a.m + b.m + 1) * sizeof(Fraction));
+	for (long i = 0; i <= a.m + b.m; i++)
 		newCoeffs[i] = Fraction();
 	Polynomial result = Polynomial(a.m + b.m, newCoeffs);
-	if (a.m > b.m)
-	{
-		for (int i = 0; i <= a.m; i++)
-			if (b.coeffs[i].nom.POZ_Z_D() != 0)
-			{
-				result = ADD_PP_P(result, MUL_PQ_P(a, b.coeffs[i]));
-				result = ADD_PP_P(result, result.MUL_Pxk_P(i));
-			}
-	}
-	else
-	{
-		for (int i = 0; i <= b.m; i++)
-			if (a.coeffs[i].nom.POZ_Z_D() != 0)
-			{
-				result = ADD_PP_P(result, MUL_PQ_P(b, a.coeffs[i]));
-				result = ADD_PP_P(result, result.MUL_Pxk_P(i));
-			}
-	}
+	Polynomial temp;
+
+	for (long i = 0; i <= b.m; i++)
+		if (b.coeffs[i].nom.POZ_Z_D() != 0)
+		{
+			temp = MUL_PQ_P(a, b.coeffs[i]);
+			temp = temp.MUL_Pxk_P(i);
+			//result.printPolynomial(); std::cout << '\n';
+			//temp.printPolynomial(); std::cout << '\n';
+			result = ADD_PP_P(result, temp);
+		}
 	return result;
 }
 
 Polynomial DIV_PP_P(Polynomial a, Polynomial b) {
-	Polynomial buff, result;
-	//	if (a.DEG_P_N() < b.DEG_P_N()) {buff.operator=(a); a.operator=(b); b.operator=(buff);}
-	while (a.DEG_P_N() >= b.DEG_P_N()) {
-		buff = b.MUL_Pxk_P(a.DEG_P_N() - b.DEG_P_N());
-		buff = MUL_PQ_P(buff, a.LED_P_Q());
-		a = SUB_PP_P(a, buff);
-		result = ADD_PP_P(result, buff);
+	Polynomial div, buff, result;
+	Fraction to_answer;
+	div.operator=(a);
+
+	while (div.DEG_P_N() > b.DEG_P_N()) {
+		div = SUB_PP_P(div, buff);
+		buff = b.MUL_Pxk_P(div.DEG_P_N() - b.DEG_P_N());
+		to_answer = DIV_QQ_Q(div.LED_P_Q(), b.LED_P_Q());
+		buff = MUL_PQ_P(buff, to_answer);
+
+		result = ADD_PP_P(result, Polynomial(div.DEG_P_N() - b.DEG_P_N(), to_answer));
 	}
 	return result;
 }
 
 Polynomial MOD_PP_P(Polynomial p1, Polynomial p2) {
 	Polynomial div = DIV_PP_P(p1, p2);
-	if (p1.DEG_P_N() >= p2.DEG_P_N()) {
-		Polynomial q = MUL_PP_P(div, p1);
-		return SUB_PP_P(p1, q);
-	}
-	else {
-		Polynomial q = MUL_PP_P(div, p2);
-		return SUB_PP_P(p2, q);
-	}
+
+	return SUB_PP_P(p1, MUL_PP_P(p2, div));
 }
 
 Polynomial GCF_PP_P(Polynomial p1, Polynomial p2) {
@@ -186,12 +219,12 @@ Polynomial GCF_PP_P(Polynomial p1, Polynomial p2) {
 
 Polynomial Polynomial::DER_P_P() {
 	Polynomial p; p.operator=(*this);
-	Fraction *ret = new Fraction(ReformInt(0), ReformInt(1).ABS_Z_N());
+	Fraction *ret = new Fraction(Integer(), Natural(1));
 	if (p.m == 0) return Polynomial(0, ret);
 
 	for (int i = 0; i < p.m; i++) {
 		p.coeffs[i].operator=(p.coeffs[i + 1]);
-		p.coeffs[i].operator=(MUL_QQ_Q(p.coeffs[i], Fraction(ReformInt(i), ReformInt(1).ABS_Z_N())));
+		p.coeffs[i].operator=(MUL_QQ_Q(p.coeffs[i], Fraction(ReformInt(i+1), ReformInt(1).ABS_Z_N())));
 	}
 	p.m--;
 	return p;
@@ -208,16 +241,4 @@ Integer ReformInt(long int a) {
 	}
 	if (a<0) return Integer(true, n, nums);
 	else return Integer(false, n, nums);
-}
-
-Natural ReformNat(long int a) {
-	short* nums = (short*)malloc(sizeof(short)); nums[0] = 0;
-	long int n = 0;
-	while (a != 0) {
-		n++;
-		nums = (short*)realloc(nums, n * sizeof(short));
-		nums[n - 1] = a % 10;
-		a /= 10;
-	}
-	return Natural(n, nums);
 }

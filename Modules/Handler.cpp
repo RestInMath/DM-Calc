@@ -26,6 +26,7 @@ void Handler(int params_count, char* params[]) {
 		counter += 1;
 		Polynomial p2 = get_P(params, op, counter);
 
+
 		get_P_val(p1,p2,op).printPolynomial();
 	}	
 }
@@ -38,7 +39,7 @@ Fraction get_F_val(char* params[]) {
 	Natural d1(params[3]), d2(params[5]), one(1);
 	Fraction num1(n1, d1), num2(n2, d2);
 
-	if (op == '+') return ADD_QQ_Q(num1, num2);
+	if (op == '+') return ADD_QQ_Q(num1, num2).RED_Q_Q();
 	else if (op == '-') return SUB_QQ_Q(num1, num2).RED_Q_Q();
 	else if (op == '/') return DIV_QQ_Q(num1, num2).RED_Q_Q();
 	else if (op == '*') return MUL_QQ_Q(num1, num2).RED_Q_Q();
@@ -70,7 +71,6 @@ Fraction get_F_val(char* params[]) {
 	}
 }
 
-
 Polynomial get_P(char* params[], string op, int &counter) {
 	long coeff_count = 0, main_deg = stoi(params[5 + counter]);
 	
@@ -100,4 +100,11 @@ Polynomial get_P_val(Polynomial a, Polynomial b, string op) {
 
 	if (op == "/") return DIV_PP_P(a, b);
 
+	if (op == "%") return MOD_PP_P(a, b);
+
+	if (op == "V") return a.FAC_P_Q(true);
+
+	if (op == "D") return GCF_PP_P(a, b);
+
+	if (op == "'") return a.DER_P_P();
 }
