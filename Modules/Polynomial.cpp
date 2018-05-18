@@ -22,7 +22,7 @@ Polynomial::Polynomial(long t_n, Fraction f)
 Polynomial::Polynomial(long t_m, Fraction* t_coeffs)
 {
 	m = t_m;
-	coeffs = (Fraction*)malloc((m + 1) * sizeof(Fraction));	//насчёт sizeof не уверен, нужно проверить
+	coeffs = (Fraction*)malloc((m + 1) * sizeof(Fraction));
 	for (int i = 0; i <= m; i++)
 		coeffs[i] = t_coeffs[i];
 }
@@ -38,7 +38,7 @@ void Polynomial::printPolynomial()
 {
 	if (m == 0) {
 		coeffs[0].printNum();
-		exit(0);
+		return;
 	}
 	for (int i = m; i >= 0; i--)
 	{
@@ -50,12 +50,13 @@ void Polynomial::printPolynomial()
 
 		coeffs[i] = coeffs[i].RED_Q_Q();
 		if (coeffs[i].INT_Q_B()) coeffs[i].nom.printForFract();
-		else coeffs[i].printForPo();
+		else coeffs[i].printNum();
 		if (i == 1)
 			std::cout << 'x' << ' ';
 		else if(i != 0)
 			std::cout << "x^" << i << ' ';
 	}
+	std::cout << '\n';
 }
 
 Polynomial ADD_PP_P(Polynomial a, Polynomial b)	
@@ -160,7 +161,7 @@ Polynomial Polynomial::FAC_P_Q(bool show)
 	for (int i = m; i >= 0; i--) {
 		new_coeffs[i] = DIV_QQ_Q(coeffs[i], mult);
 	}
-	if (show) std::cout << '('; mult.RED_Q_Q().printForPo(); std::cout << ") ";
+	if (show) std::cout << '('; mult.RED_Q_Q().printNum(); std::cout << ") ";
 	return Polynomial(m, new_coeffs);
 }
 
@@ -188,14 +189,14 @@ Polynomial DIV_PP_P(Polynomial a, Polynomial b) {
 	Polynomial div, buff, result;
 	Fraction to_answer;
 	div.operator=(a);
-
-	while (div.DEG_P_N() > b.DEG_P_N()) {
-		div = SUB_PP_P(div, buff);
-		buff = b.MUL_Pxk_P(div.DEG_P_N() - b.DEG_P_N());
+	long res_deg;
+	while (div.DEG_P_N() >= b.DEG_P_N()) {
 		to_answer = DIV_QQ_Q(div.LED_P_Q(), b.LED_P_Q());
+		buff = b.MUL_Pxk_P(div.DEG_P_N() - b.DEG_P_N());
 		buff = MUL_PQ_P(buff, to_answer);
-
-		result = ADD_PP_P(result, Polynomial(div.DEG_P_N() - b.DEG_P_N(), to_answer));
+		res_deg = div.DEG_P_N() - b.DEG_P_N();
+		div = SUB_PP_P(div, buff);
+		result = ADD_PP_P(result, Polynomial(res_deg, to_answer));
 	}
 	return result;
 }

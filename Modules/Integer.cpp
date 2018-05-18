@@ -83,13 +83,11 @@ int Integer::POZ_Z_D() {
 	else return 2;
 }
 
-//ready
 Integer Integer::MUL_ZM_Z() {
 	sign = !sign;
 	return Integer(sign, n, nums);
 }
 
-//ready
 Natural Integer::TRANS_Z_N()
 {
 	return Natural(n, nums);
@@ -99,15 +97,12 @@ Integer TRANS_N_Z(Natural a) {
 	return Integer(a);
 }
 
-//ready
 Integer ADD_ZZ_Z(Integer i1, Integer i2) {
 	int first_pos = i1.POZ_Z_D(),
 		second_pos = i2.POZ_Z_D();
 	
 	if (first_pos == 0) return i2;
 	else if (second_pos == 0) return i1;
-
-	
 
 	if (first_pos == 2 && second_pos == 2) {
 		return TRANS_N_Z(ADD_NN_N(i1.TRANS_Z_N(), i2.TRANS_Z_N()));

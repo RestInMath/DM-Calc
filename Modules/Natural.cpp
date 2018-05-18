@@ -149,41 +149,14 @@ void nat_reall(Natural &a, long int n) {
 	a.n += n;
 }
 
-void nat_reall(int* &a, long int len,  long int n) {
-	short* t = (short*)malloc((len + 1) * sizeof(short));
-	for (int i = 0; i <= len; i++) {
-		t[i] = a[i];
-	}
-
-	len += n;
-	a = (int*)realloc(a, (len + 1) * sizeof(int));
-	for (int i = 0; i <= len; i++) {
-		a[i] = t[i];
-	}
-}
-
-void nat_reall(short* &a, long int len, long int n) {
-	short* t = (short*)malloc((len + 1) * sizeof(short));
-	for (int i = 0; i <= len; i++) {
-		t[i] = a[i];
-	}
-	//std::cout << std::endl;
-	len += n;
-	a = (short*)realloc(a, (len + 1) * sizeof(short));
-	for (int i = 0; i <= len; i++) {
-		a[i] = t[i];
-		//std::cout << a[i] << ' ';
-	}
-}
-
 Natural ADD_NN_N(Natural a, Natural b) {
 	Natural temp,x,y;
 	int next = 0;
 	long int i, len;
 	if (COM_NN_D(a, b) == 1) {
 		temp.operator= (b);
+		x.operator= (b);
 		y.operator= (a);
-		x.operator= (temp);
 	}
 	else {
 		temp.operator= (a);
@@ -207,18 +180,19 @@ Natural ADD_NN_N(Natural a, Natural b) {
 	}
 
 	for (i = len + 1; i <= temp.n && next; i++) {
-		if (i == temp.n) {
+		if (temp.nums[i] + next < 10) {
 			temp.nums[i]++;
 			next = 0;
 		}
-		else if (temp.nums[i] + next < 10) {
-			temp.nums[i] += 1;
+		else if (i == temp.n) {
+			nat_reall(temp, 1);
+			temp.nums[i+1] = 1, 
+			temp.nums[i] = 0;
 			next = 0;
 		}
 		else
 			temp.nums[i] = 0;
 	}
-
 	return temp;
 }
 
@@ -277,8 +251,8 @@ int DIV_NN_Dk(Natural a, Natural b, long int k) {
 	else if (comp == 0) return 1;
 	
 	Natural temp, temp2;
-	temp2.operator = (b); //2
-	temp2 = temp2.MUL_Nk_N(k); //20
+	temp2.operator = (b);
+	temp2 = temp2.MUL_Nk_N(k);
 	temp.operator=(b); 
 	while (i < 10 && COM_NN_D(a, temp) != 1) {
 		temp.operator= (temp2);

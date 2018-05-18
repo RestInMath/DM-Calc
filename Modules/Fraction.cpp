@@ -19,12 +19,6 @@ void Fraction::printNum()
 	den.printForPo();
 }
 
-void Fraction::printForPo() { // ???
-	nom.printForFract();
-	std::cout << "/";
-	den.printForPo();
-}
-
 void Fraction::print()
 {
 	nom.printForFract();
@@ -60,7 +54,7 @@ Integer Fraction::TRANS_Q_Z (){
 	else; //ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?
 }
 
-Fraction ADD_QQ_Q(Fraction f1, Fraction f2) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½, lol
+Fraction ADD_QQ_Q(Fraction f1, Fraction f2) {
 	Natural nok_N = LCM_NN_N(f1.den, f2.den);
 	Integer nok_Z = TRANS_N_Z(nok_N);
 	Integer mnozh1 = DIV_ZZ_Z(nok_Z, TRANS_N_Z(f1.den));
@@ -69,7 +63,7 @@ Fraction ADD_QQ_Q(Fraction f1, Fraction f2) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿
 	Integer newNom2_Z = MUL_ZZ_Z(mnozh2, f2.nom);
 
 	Integer newNom_Z = ADD_ZZ_Z(newNom1_Z, newNom2_Z);
-	return Fraction(newNom_Z, nok_N);//ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	return Fraction(newNom_Z, nok_N);
 }
 
 Fraction MUL_QQ_Q (Fraction f1, Fraction f2){
@@ -82,7 +76,7 @@ Fraction MUL_QQ_Q (Fraction f1, Fraction f2){
 	return Fraction(newNom_Z, newDen_Z.ABS_Z_N());
 }
 
-Fraction SUB_QQ_Q(Fraction f1, Fraction f2) {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½, lol
+Fraction SUB_QQ_Q(Fraction f1, Fraction f2) {
 	Natural nok_N = LCM_NN_N(f1.den, f2.den);
 	Integer nok_Z = TRANS_N_Z(nok_N);
 	Integer mnozh1 = DIV_ZZ_Z(nok_Z, TRANS_N_Z(f1.den));
